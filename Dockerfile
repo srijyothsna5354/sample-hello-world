@@ -3,6 +3,7 @@ MAINTAINER Azure App Services Container Images <appsvc-images@microsoft.com>
 
 COPY startup /opt/startup
 COPY app.js /home/site/wwwroot/app.js
+COPY hostingstart.html /home/site/wwwroot/hostingstart.html
 COPY sshd_config /etc/ssh/
 
 RUN echo "ipv6" >> /etc/modules
@@ -13,7 +14,7 @@ RUN echo "http://dl-cdn.alpinelinux.org/alpine/v3.6/community" >> /etc/apk/repos
 RUN npm install -g pm2 \
      && mkdir -p /home/LogFiles \
      && echo "root:Docker!" | chpasswd \
-     && echo "cd /home" >> /etc/bash.bashrc \
+     && echo "cd /home/site/wwwroot" >> /etc/bash.bashrc \
      && apk update --no-cache \
      && apk add openssh \
      && apk add openrc \
@@ -22,8 +23,6 @@ RUN npm install -g pm2 \
      && apk add wget \
      && apk add tcptraceroute \
      && apk add bash \
-     && cd /opt/startup \
-     && npm install \
      && chmod 755 /opt/startup/init_container.sh \
      && cd /home/site/wwwroot \
      && npm install express
